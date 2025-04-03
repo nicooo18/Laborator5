@@ -6,12 +6,14 @@ import java.util.List;
 
 public class Application {
     public static void main(String[] args) {
+        String inputFile="in.txt";
+        String outputFile="out.txt";
         try {
             System.out.println("Original file content:");
             printSmallTextFile("in.txt");
 
-            System.out.println("\n\n");
-            printWithNewlineAfterDot("in.txt");
+            System.out.println("\n\nModified content with newlines after '.' saved to " + outputFile);
+            saveModifiedTextToFile(inputFile, outputFile);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -27,14 +29,18 @@ public class Application {
         }
     }
 
-    static void printWithNewlineAfterDot(String fileName) throws IOException {
-        System.out.println("Reading file and adding newline after '.' :");
-        Path path = Paths.get(fileName);
-        List<String> lines = Files.readAllLines(path);
+    static void saveModifiedTextToFile(String inputFile, String outputFile) throws IOException {
+        Path inputPath = Paths.get(inputFile);
+        Path outputPath = Paths.get(outputFile);
+
+        List<String> lines = Files.readAllLines(inputPath);
+        StringBuilder modifiedContent = new StringBuilder();
 
         for (String line : lines) {
-            String modifiedLine = line.replace(".", ".\n"); // Adaugă un newline după fiecare '.'
-            System.out.print(": " + modifiedLine + "\n");
+            modifiedContent.append(line.replace(".", ".\n")).append("\n");
         }
+
+        Files.write(outputPath, modifiedContent.toString().getBytes());
+        System.out.println("Modified content saved to " + outputFile);
     }
 }
